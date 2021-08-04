@@ -10,4 +10,4 @@ class StartScreen(QWidget):
         window.setLayout(layout)
         window.show()
         app.exec_()
-        
+
