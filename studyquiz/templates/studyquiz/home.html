@@ -1,7 +1,20 @@
 {% extends "studyquiz/layout.html" %}
 {% block title %}
-Home
+StudyQuiz
 {% endblock %}
 {% block content %}
-<p>Home page for the Visual Studio Code Django tutorial.</p>
+<div class="px-4 py-5 my-5 text-center">
+    <h1 class="display-5 fw-bold">StudyQuiz</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">Choose one exam from the list below:</p>
+      <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+        <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Start!</button>
+      </div>
+    </div>
+</div>
 {% endblock %}
