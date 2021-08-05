@@ -1,0 +1,29 @@
+{% extends "studyquiz/layout.html" %}
+{% block title %}
+Test di {{ test.nome }}
+{% endblock %}
+{% block content %}
+<div class="px-4 py-5 my-5 text-left">
+    <div class="col-lg-6 mx-auto">
+      {% if domande_list %}
+        <div>
+            {% for domanda in domande_list %}
+              <strong> {{ domanda.testo }}:</strong> 
+              {% for risposta in domanda.risposte %}
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+                  <label class="form-check-label" for="flexRadioDefault1">
+                    {{ risposta.testo }}
+                  </label>
+                </div>
+              {% endfor %}
+            {% endfor %}
+        </div>
+      {% else %}
+        <div class="alert alert-danger" role="alert">
+          No questions found!
+        </div>
+      {% endif %}
+    </div>
+</div>
+{% endblock %}

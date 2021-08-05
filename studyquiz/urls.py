@@ -4,7 +4,8 @@ from studyquiz.models import Esame
 
 urlpatterns = [
     path("", views.HomeListView.as_view(), name="home"),
-    path("hello/<slug:name>", views.hello_there, name="hello"),
+    path("exam/", views.TestListView.as_view(), name="exam"),
     path("about/", views.about, name="about"),
     path("contact/", views.contact, name="contact"),
+    path('start_exam/', views.start_exam, name='start_exam')
 ]
