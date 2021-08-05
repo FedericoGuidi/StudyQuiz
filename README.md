@@ -3,4 +3,5 @@ StudyQuiz is a Django web application that lets you practice and manage any ques
 
 ## How it is built
 - Python 3.9.6 with Django
-- MongoDB
+- MongoDB integration with PyMongo
+- Bootstrap 5

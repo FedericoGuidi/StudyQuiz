@@ -3,3 +3,7 @@
 
 - You need to have a virtual environment with Django. You can install it via pip using the command:
   pip install Django
+
+- For MongoDB, PyMongo is required. To install it:
+  pip install 'pymongo[snappy,gssapi,srv,tls]'
+  pip install dnspython
