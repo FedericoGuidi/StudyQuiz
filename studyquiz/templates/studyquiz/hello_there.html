@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>Hello, Django</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'studyquiz/site.css' %}" />
+    </head>
+    <body>
+        <span class="message">
+            Hello there, {{ name }}! It's {{ date | date:"l, d F, Y" }} at {{ date | time:"H:i:s" }}
+        </span>
+    </body>
+</html>

@@ -1,0 +1,5 @@
+- To create a virtual environment named "env", use the command:
+  python -m venv env
+
+- You need to have a virtual environment with Django. You can install it via pip using the command:
+  pip install Django
