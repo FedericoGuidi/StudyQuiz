@@ -1,6 +1,7 @@
 from typing import List
 from utils import get_db
 from django.db import models
+from bson.objectid import ObjectId
 
 class Esame(models.Model):
     id = models.SlugField
@@ -22,12 +23,21 @@ class Esame(models.Model):
         for esame in esami:
             list.append(Esame(esame["_id"], esame["Nome"]))
         return list
+    
+    def retrieve(id):
+        db = get_db()
+        esami_collection = db['Esami']
+        esame = esami_collection.find_one({ "_id": ObjectId(id) })
+        return Esame(esame["_id"], esame["Nome"])
+        
 
 class Risposta(models.Model):
+    id = models.SlugField
     testo = models.SlugField
     corretta = models.BooleanField
 
-    def __init__(self, testo, corretta):
+    def __init__(self, id, testo, corretta):
+        self.id = id
         self.testo = testo
         self.corretta = corretta
 
@@ -57,6 +67,6 @@ class Test(models.Model):
         for domanda in domande:
             risposte_list = []
             for risposta in domanda["Risposte"]:
-                    risposte_list.append(Risposta(risposta["Testo"], risposta["Corretta"]))
+                    risposte_list.append(Risposta(risposta["_id"], risposta["Testo"], risposta["Corretta"]))
             list.append(Domanda(domanda["_id"], domanda["Domanda"], risposte_list))
-        return Test("Esame di prova", list)
+        return Test(Esame.retrieve(exam_id).nome, list)

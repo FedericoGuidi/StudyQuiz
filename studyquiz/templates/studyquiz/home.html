@@ -9,7 +9,7 @@ StudyQuiz
       <p class="lead mb-4">Choose one exam from the list below:</p>
 
       {% if exam_list %}
-        <form action="{% url 'start_exam' %}" method="post">
+        <form action="{% url 'exam' %}" method="post">
           {% csrf_token %}
           <select name="exam" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
               {% for exam in exam_list %}

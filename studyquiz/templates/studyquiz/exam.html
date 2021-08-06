@@ -1,22 +1,28 @@
 {% extends "studyquiz/layout.html" %}
 {% block title %}
-Test di {{ test.nome }}
+Esame di "{{ exam_name }}"
 {% endblock %}
 {% block content %}
 <div class="px-4 py-5 my-5 text-left">
-    <div class="col-lg-6 mx-auto">
+  <div class="text-center mb-5">
+    <p class="lead">Esame di</p>
+    <h2>{{ exam_name }}</h2>
+  </div>
+    <div class="col-lg-8 mx-auto">
       {% if domande_list %}
         <div>
+          <ol>
             {% for domanda in domande_list %}
-              <strong> {{ domanda.testo }}:</strong> 
+              <li><strong> {{ domanda.testo }}:</strong> </li>
               {% for risposta in domanda.risposte %}
                 <div class="form-check">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                  <label class="form-check-label" for="flexRadioDefault1">
+                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="{{ risposta.id }}">
+                  <label class="form-check-label" for="{{ risposta.id }}">
                     {{ risposta.testo }}
                   </label>
                 </div>
               {% endfor %}
+            </ol>
             {% endfor %}
         </div>
       {% else %}
