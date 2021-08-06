@@ -35,3 +35,6 @@ def exam(request):
     test = Test.retrieve_test(exam_id)
     return render(request, "studyquiz/exam.html", {"domande_list": test.domande, "exam_name": test.esame })
 
+def login(request):
+    return render(request, "studyquiz/login.html")
+
