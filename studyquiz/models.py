@@ -1,55 +1,42 @@
-from typing import List
-from utils import get_db
-from django.db import models
-from bson.objectid import ObjectId
+from djongo import models
+from bson import ObjectId
+from djongo.models.fields import ArrayField
+from django.db.models.functions import Length
+
+ArrayField.register_lookup(Length)
+
 
 class Esame(models.Model):
-    id = models.SlugField
-    nome = models.SlugField
+    _id = models.ObjectIdField()
+    nome = models.SlugField()
 
-    def __init__(self, id, nome):
-        self.id = id
-        self.nome = nome
+    class Meta:
+        db_table = 'Esami'
 
-    def __str__(self):
-        """Returns a string representation of a message."""
-        return self.nome
-
-    def retrieve_exams():
-        db = get_db()
-        list = []
-        esami_collection = db['Esami']
-        esami = esami_collection.find()
-        for esame in esami:
-            list.append(Esame(esame["_id"], esame["Nome"]))
-        return list
-    
-    def retrieve(id):
-        db = get_db()
-        esami_collection = db['Esami']
-        esame = esami_collection.find_one({ "_id": ObjectId(id) })
-        return Esame(esame["_id"], esame["Nome"])
-        
 
 class Risposta(models.Model):
-    id = models.SlugField
-    testo = models.SlugField
-    corretta = models.BooleanField
+    _id = models.ObjectIdField()
+    testo = models.SlugField()
+    corretta = models.BooleanField()
 
-    def __init__(self, id, testo, corretta):
-        self.id = id
-        self.testo = testo
-        self.corretta = corretta
+    class Meta:
+        abstract = True
+
 
 class Domanda(models.Model):
-    id = models.SlugField
-    testo = models.SlugField
-    risposte = []
+    _id = models.ObjectIdField()
+    esame = models.SlugField()
+    domanda = models.SlugField()
+    lezione = models.IntegerField()
+    multipla = models.BooleanField()
+    risposte = models.ArrayField(
+        model_container=Risposta
+    )
+    risposta = models.TextField()
 
-    def __init__(self, id, testo, risposte):
-        self.id = id
-        self.testo = testo
-        self.risposte = risposte
+    class Meta:
+        db_table = 'Domande'
+
 
 class Test(models.Model):
     esame = Esame
@@ -59,14 +46,7 @@ class Test(models.Model):
         self.esame = esame
         self.domande = domande
 
-    def retrieve_test(exam_id):
-        db = get_db()
-        list = []
-        domande_collection = db['Domande']
-        domande = domande_collection.find({ "Esame": exam_id, "Risposte": { "$size": 4 } } )
-        for domanda in domande:
-            risposte_list = []
-            for risposta in domanda["Risposte"]:
-                    risposte_list.append(Risposta(risposta["_id"], risposta["Testo"], risposta["Corretta"]))
-            list.append(Domanda(domanda["_id"], domanda["Domanda"], risposte_list))
-        return Test(Esame.retrieve(exam_id).nome, list)
+    def retrieve(exam_id):
+        domande = Domanda.objects.filter(esame=exam_id, multipla=True)
+        esame = Esame.objects.get(pk=ObjectId(exam_id))
+        return Test(esame, domande)

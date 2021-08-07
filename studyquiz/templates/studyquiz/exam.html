@@ -1,35 +1,49 @@
 {% extends "studyquiz/layout.html" %}
 {% block title %}
-Esame di "{{ exam_name }}"
+Esame di "{{ exam.nome }}"
 {% endblock %}
+{% load studyquiz_extras %}
 {% block content %}
 <div class="px-4 py-5 my-5 text-left">
   <div class="text-center mb-5">
     <p class="lead">Esame di</p>
-    <h2>{{ exam_name }}</h2>
+    <h2>{{ exam.nome }}</h2>
   </div>
-    <div class="col-lg-8 mx-auto">
-      {% if domande_list %}
+  <div class="col-lg-8 mx-auto">
+    {% if domande_list %}
+    <form>
+      <ol>
+        {% for domanda in domande_list %}
+        <li><strong> {{ domanda.domanda }}:</strong> </li>
+        <div class="mb-5">
+          {% for risposta in domanda.risposte %}
+          <div class="form-check mb-1">
+            <input class="form-check-input" type="radio" name="flexRadioDefault" id="{{ risposta.id }}">
+            <label class="form-check-label" for="{{ risposta.pk }}">
+              {{ risposta.testo }}
+            </label>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </ol>
+      <div class="d-flex justify-content-center">
+        <div class="me-auto">
+          <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
+        </div>
         <div>
-          <ol>
-            {% for domanda in domande_list %}
-              <li><strong> {{ domanda.testo }}:</strong> </li>
-              {% for risposta in domanda.risposte %}
-                <div class="form-check">
-                  <input class="form-check-input" type="radio" name="flexRadioDefault" id="{{ risposta.id }}">
-                  <label class="form-check-label" for="{{ risposta.id }}">
-                    {{ risposta.testo }}
-                  </label>
-                </div>
-              {% endfor %}
-            </ol>
-            {% endfor %}
+          <button type="submit" class="btn btn-primary">Finish!</button>
         </div>
-      {% else %}
-        <div class="alert alert-danger" role="alert">
-          No questions found!
-        </div>
-      {% endif %}
+      </div>
+    </form>
+    {% else %}
+    <div class="alert alert-danger" role="alert">
+      No questions found!
     </div>
+    <div class="text-center">
+      <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
+    </div>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

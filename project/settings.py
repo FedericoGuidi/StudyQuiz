@@ -20,7 +20,7 @@ STATIC_ROOT = BASE_DIR / 'static_collected'
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-k_svzp)qne9jz@0%en(1u#dm1=n0t+$n8l&zw=ou3h*wq6l_8q'
+SECRET_KEY = '*****'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -76,8 +76,12 @@ WSGI_APPLICATION = 'project.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'djongo',
+        'NAME': 'db_name',
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': 'mongodb+srv://<username>:<password>@<cluster>.mongodb.net/test'
+        }
     }
 }
 
