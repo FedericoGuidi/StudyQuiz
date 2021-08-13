@@ -3,5 +3,28 @@
 Results
 {% endblock %}
 {% block content %}
-<p>You scored {{ results.grade }} out of {{ results.total }} </p>
+<div class="px-4 py-5 my-5 text-center">
+    <h2 class="display-5 fw-bold">Results</h2>
+    <div class="col-lg-6 mx-auto">
+        <p class="lead mb-4">You scored:</p>
+
+        <div class="flex-wrapper">
+            <div class="single-chart m-auto">
+                <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    {% if results.grade > 0 %}
+                    <path class="circle" stroke-dasharray="{{ results.percent }}, 100" d="M18 2.0845
+                            a 15.9155 15.9155 0 0 1 0 31.831
+                            a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    {% endif %}
+                    <text x="18" y="20.35" class="percentage">
+                        {{ results.grade }} / {{ results.total }}
+                    </text>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

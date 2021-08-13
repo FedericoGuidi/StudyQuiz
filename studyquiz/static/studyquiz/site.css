@@ -24,3 +24,50 @@
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
+
+/*SCORE CIRCLE PROGRESS BAR*/
+
+.flex-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+  
+  .single-chart {
+    width: 33%;
+    justify-content: space-around;
+  }
+  
+  .circular-chart {
+    display: block;
+    margin: 10px auto;
+    max-width: 80%;
+    max-height: 250px;
+  }
+  
+  .circle-bg {
+    fill: none;
+    stroke: #eee;
+    stroke-width: 3.8;
+  }
+  
+  .circle {
+    fill: none;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+  }
+  
+  @keyframes progress {
+    0% {
+      stroke-dasharray: 0 100;
+    }
+  }
+  
+  .circular-chart .circle {
+    stroke: #4CC790;
+  }
+  
+  .percentage {
+    color: #212529;
+    font-size: 0.5em;
+    text-anchor: middle;
+  }

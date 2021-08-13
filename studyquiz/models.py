@@ -58,7 +58,9 @@ class Test(models.Model):
 class Results(models.Model):
     grade = models.IntegerField()
     total = models.IntegerField()
+    percent = models.FloatField()
 
-    def __init__(self, grade, total):
+    def __init__(self, grade, total, percent):
         self.grade = grade
         self.total = total
+        self.percent = percent

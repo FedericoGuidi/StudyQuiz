@@ -71,8 +71,10 @@ def send_exam(request):
 
 
 def results(request):
-    results = Results(request.session.get('grade'),
-                      request.session.get('total'))
+    grade = request.session.get('grade')
+    total = request.session.get('total')
+    percent = (grade * 100) / total
+    results = Results(grade, total, percent)
     return render(request, "studyquiz/results.html", {'results': results})
 
 
