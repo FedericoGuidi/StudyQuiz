@@ -2,7 +2,6 @@
 {% block title %}
 Esame di "{{ exam.nome }}"
 {% endblock %}
-{% load studyquiz_extras %}
 {% block content %}
 <div class="px-4 py-5 my-5 text-left">
   <div class="text-center mb-5">
@@ -10,15 +9,47 @@ Esame di "{{ exam.nome }}"
     <h2>{{ exam.nome }}</h2>
   </div>
   <div class="col-lg-8 mx-auto">
+    {% if formset.forms %}
+    <form action="{% url 'send_exam' %}" method="POST">
+      {% csrf_token %}
+      {{ formset.management_form }}
+      <table>
+        {% for form in formset %}
+        {{ form }}
+        {% endfor %}
+      </table>
+
+      <div class="d-flex justify-content-center">
+        <div class="me-auto">
+          <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
+        </div>
+        <div>
+          <button type="submit" class="btn btn-primary">Finish!</button>
+        </div>
+      </div>
+
+    </form>
+    {% else %}
+    <div class="alert alert-danger" role="alert">
+      No questions found!
+    </div>
+    <div class="text-center">
+      <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
+    </div>
+    {% endif %}
+
+    <!--
     {% if domande_list %}
-    <form>
+    <form action="{% url 'send_exam' %}" method="post">
+      {% csrf_token %}
       <ol>
         {% for domanda in domande_list %}
         <li><strong> {{ domanda.domanda }}:</strong> </li>
         <div class="mb-5">
           {% for risposta in domanda.risposte %}
           <div class="form-check mb-1">
-            <input class="form-check-input" type="radio" name="flexRadioDefault" id="{{ risposta.id }}">
+            <input class="form-check-input" type="radio" name="risposte" id="{{ risposta.pk }}"
+              value="{{ risposta.pk }}">
             <label class="form-check-label" for="{{ risposta.pk }}">
               {{ risposta.testo }}
             </label>
@@ -44,6 +75,7 @@ Esame di "{{ exam.nome }}"
       <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
     </div>
     {% endif %}
+    -->
   </div>
 </div>
 {% endblock %}

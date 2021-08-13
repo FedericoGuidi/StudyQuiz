@@ -1,11 +1,14 @@
-from django.shortcuts import render
+from studyquiz.forms import DomandaForm
+from django.shortcuts import redirect, render
 from django.views.generic import ListView
 from django.http import HttpResponseRedirect
 from django.views import generic
+from django.forms import modelformset_factory
+from bson import ObjectId
 
 from datetime import datetime
 
-from studyquiz.models import Esame, Test
+from studyquiz.models import Domanda, Esame, Results, Risposta, Test
 
 
 class HomeListView(generic.ListView):
@@ -39,7 +42,38 @@ def contact(request):
 def exam(request):
     exam_id = request.POST['exam']
     test = Test.retrieve(exam_id)
-    return render(request, "studyquiz/exam.html", {"domande_list": test.domande, "exam": test.esame})
+    DomandaFormSet = modelformset_factory(Domanda, form=DomandaForm, extra=0)
+    formset = DomandaFormSet(queryset=test.domande)
+    return render(request, "studyquiz/exam.html", {'formset': formset, "exam": test.esame})
+
+
+def send_exam(request):
+    DomandaFormSet = modelformset_factory(Domanda, form=DomandaForm, extra=0)
+    if request.method == 'POST':
+        # create a form instance and populate it with data from the request:
+        formset = DomandaFormSet(request.POST)
+        # check whether it's valid:
+        if formset.is_valid():
+            # process the data in form.cleaned_data as required
+            risposte = [ObjectId(data['risposta_id'])
+                        for data in formset.cleaned_data]
+            domande = [data['_id'] for data in formset.cleaned_data]
+            request.session['grade'] = Test.grade(risposte)
+            request.session['total'] = len(domande)
+            # redirect to a new URL:
+            return redirect('/results/')
+
+    # if a GET (or any other method) we'll create a blank form
+    else:
+        formset = DomandaFormSet()
+
+    return render(request, 'studyquiz/exam.html', {'formset': formset, })
+
+
+def results(request):
+    results = Results(request.session.get('grade'),
+                      request.session.get('total'))
+    return render(request, "studyquiz/results.html", {'results': results})
 
 
 def login(request):

@@ -1,9 +1,5 @@
 from djongo import models
 from bson import ObjectId
-from djongo.models.fields import ArrayField
-from django.db.models.functions import Length
-
-ArrayField.register_lookup(Length)
 
 
 class Esame(models.Model):
@@ -33,6 +29,7 @@ class Domanda(models.Model):
         model_container=Risposta
     )
     risposta = models.TextField()
+    objects = models.DjongoManager()
 
     class Meta:
         db_table = 'Domande'
@@ -50,3 +47,18 @@ class Test(models.Model):
         domande = Domanda.objects.filter(esame=exam_id, multipla=True)
         esame = Esame.objects.get(pk=ObjectId(exam_id))
         return Test(esame, domande)
+
+    def grade(risposte_id):
+        risposte_corrette = Domanda.objects.mongo_find(
+            {"risposte": {"$elemMatch": {"_id": {"$in": risposte_id}, "corretta": True}}}
+        )
+        return risposte_corrette.count()
+
+
+class Results(models.Model):
+    grade = models.IntegerField()
+    total = models.IntegerField()
+
+    def __init__(self, grade, total):
+        self.grade = grade
+        self.total = total
