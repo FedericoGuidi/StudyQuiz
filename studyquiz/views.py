@@ -1,7 +1,5 @@
 from studyquiz.forms import DomandaForm
 from django.shortcuts import redirect, render
-from django.views.generic import ListView
-from django.http import HttpResponseRedirect
 from django.views import generic
 from django.forms import modelformset_factory
 from bson import ObjectId
@@ -31,8 +29,9 @@ def home(request):
     return render(request, "studyquiz/home.html")
 
 
-def about(request):
-    return render(request, "studyquiz/about.html")
+def import_questions(request):
+    esami = Esame.objects.all()
+    return render(request, "studyquiz/import.html", { 'exam_list': esami })
 
 
 def contact(request):

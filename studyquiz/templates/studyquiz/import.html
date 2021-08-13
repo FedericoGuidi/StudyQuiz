@@ -1,0 +1,26 @@
+{% extends "studyquiz/layout.html" %}
+{% block title %}
+About us
+{% endblock %}
+{% block content %}
+<div class="px-4 py-5 my-5 text-left">
+    <div class="col-lg-6 mx-auto">
+        <h3 class="fw-bold">Import questions</h3>
+        <p>Here you can upload a <span class="badge bg-secondary">.csv</span> file containing the questions. <strong>Remember to select the connected exam.</strong></p>
+        
+        <div class="input-group mb-3">
+            <span class="input-group-text" id="inputGroup-sizing-default">Exam</span>
+            <select name="exam" class="form-select">
+                {% for exam in exam_list %}
+                <option value="{{ exam.pk }}">{{ exam.nome }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="input-group">
+            <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+            <button class="btn btn-outline-primary" type="button" id="inputGroupFileAddon04">Upload</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
