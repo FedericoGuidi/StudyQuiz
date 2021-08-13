@@ -48,6 +48,7 @@ def exam(request):
 
 
 def send_exam(request):
+    exam_id = request.POST['exam']
     DomandaFormSet = modelformset_factory(Domanda, form=DomandaForm, extra=0)
     if request.method == 'POST':
         # create a form instance and populate it with data from the request:
@@ -62,12 +63,14 @@ def send_exam(request):
             request.session['total'] = len(domande)
             # redirect to a new URL:
             return redirect('/results/')
+        else:
+            exam = Esame.objects.get(pk=ObjectId(exam_id))
 
     # if a GET (or any other method) we'll create a blank form
     else:
         formset = DomandaFormSet()
 
-    return render(request, 'studyquiz/exam.html', {'formset': formset, })
+    return render(request, 'studyquiz/exam.html', {'formset': formset, 'exam': exam})
 
 
 def results(request):

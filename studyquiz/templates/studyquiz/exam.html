@@ -12,60 +12,39 @@ Esame di "{{ exam.nome }}"
     {% if formset.forms %}
     <form action="{% url 'send_exam' %}" method="POST">
       {% csrf_token %}
+      <input type="hidden" value="{{ exam.pk }}" name="exam" />
       {{ formset.management_form }}
-      <table>
-        {% for form in formset %}
-        {{ form }}
-        {% endfor %}
-      </table>
-
-      <div class="d-flex justify-content-center">
-        <div class="me-auto">
-          <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
-        </div>
-        <div>
-          <button type="submit" class="btn btn-primary">Finish!</button>
-        </div>
-      </div>
-
-    </form>
-    {% else %}
-    <div class="alert alert-danger" role="alert">
-      No questions found!
-    </div>
-    <div class="text-center">
-      <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
-    </div>
-    {% endif %}
-
-    <!--
-    {% if domande_list %}
-    <form action="{% url 'send_exam' %}" method="post">
-      {% csrf_token %}
       <ol>
-        {% for domanda in domande_list %}
-        <li><strong> {{ domanda.domanda }}:</strong> </li>
-        <div class="mb-5">
-          {% for risposta in domanda.risposte %}
-          <div class="form-check mb-1">
-            <input class="form-check-input" type="radio" name="risposte" id="{{ risposta.pk }}"
-              value="{{ risposta.pk }}">
-            <label class="form-check-label" for="{{ risposta.pk }}">
-              {{ risposta.testo }}
-            </label>
-          </div>
-          {% endfor %}
+        {% for form in formset %}
+        <li><strong>{{ form.instance.domanda }}:</strong></li>
+        <input type="hidden" name="{{ form.prefix }}-_id" value="{{ form.instance.pk }}" id="id_{{ form.prefix }}-_id">
+        {% for field in form %}
+        {% if field.is_hidden %}
+        {{ field }}
+        {% else %}
+        {% for input in field.subwidgets %}
+        <div class="form-check mb-1">
+          <input class="form-check-input" type="{{ input.data.type }}" name="{{ input.data.name }}" value="{{ input.data.value }}" id="{{ input.id_for_label }}" {% if input.data.selected %} checked {% endif %} />
+          <label class="form-check-label" for="{{ input.id_for_label }}">
+            {{ input.choice_label }}
+          </label>
         </div>
+        {% endfor %}
+        {{ field.errors }}
+        {% endif %}
+        {% endfor %}
         {% endfor %}
       </ol>
+
       <div class="d-flex justify-content-center">
         <div class="me-auto">
           <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
         </div>
         <div>
-          <button type="submit" class="btn btn-primary">Finish!</button>
+          <button type="submit" class="btn btn-primary">Finish</button>
         </div>
       </div>
+
     </form>
     {% else %}
     <div class="alert alert-danger" role="alert">
@@ -75,7 +54,6 @@ Esame di "{{ exam.nome }}"
       <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
     </div>
     {% endif %}
-    -->
   </div>
 </div>
 {% endblock %}
