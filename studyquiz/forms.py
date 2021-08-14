@@ -17,3 +17,8 @@ class DomandaForm(forms.ModelForm):
             for risposta in self.instance.risposte:
                 choices.append((risposta.pk, risposta.testo))
             self.fields['risposta_id'].choices = choices
+
+
+class UploadCSVForm(forms.Form):
+    exam = forms.CharField(max_length=50)
+    file = forms.FileField(widget=forms.FileInput(attrs={'accept': ".csv"}))

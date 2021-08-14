@@ -1,6 +1,8 @@
 from djongo import models
 from bson import ObjectId
+import csv
 
+from djongo.models.fields import ObjectIdField
 
 class Esame(models.Model):
     _id = models.ObjectIdField()
@@ -11,7 +13,7 @@ class Esame(models.Model):
 
 
 class Risposta(models.Model):
-    _id = models.ObjectIdField()
+    _id = models.SlugField(primary_key=True)
     testo = models.SlugField()
     corretta = models.BooleanField()
 
@@ -64,3 +66,29 @@ class Results(models.Model):
         self.grade = grade
         self.total = total
         self.percent = percent
+
+
+class FileCSV():
+    def handle_CSV(exam, file):
+        reader = csv.DictReader(file, delimiter=';')
+        for row in reader:
+            risposte_subset = {k:v for k,v in row.items() if k.startswith('risposta_') and (v not in (None, '') or v.strip())}
+            if len(risposte_subset) > 1:
+                risposte = []
+                risposta_aperta = None
+                for key, risposta in risposte_subset.items():
+                    corretta = True if row['num_corretta'] == key[-1] else False
+                    r = Risposta(_id=ObjectId(), testo=risposta, corretta=corretta)
+                    risposte.append(r)
+            else:
+                risposte = None
+                risposta_aperta = row['risposta_1']
+            multipla = True if row['num_risposte'] != '0' else False
+            d = Domanda(lezione=row['lezione'], 
+                        domanda=row['domanda'],
+                        esame=exam,
+                        multipla=multipla,
+                        risposte=risposte,
+                        risposta=risposta_aperta)
+            d.save()
+        return reader.line_num - 1

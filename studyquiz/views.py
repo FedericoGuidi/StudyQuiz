@@ -1,4 +1,6 @@
-from studyquiz.forms import DomandaForm
+from io import TextIOWrapper
+from django.http.response import HttpResponseRedirect
+from studyquiz.forms import DomandaForm, UploadCSVForm
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.forms import modelformset_factory
@@ -6,7 +8,7 @@ from bson import ObjectId
 
 from datetime import datetime
 
-from studyquiz.models import Domanda, Esame, Results, Risposta, Test
+from studyquiz.models import Domanda, Esame, Results, Test, FileCSV
 
 
 class HomeListView(generic.ListView):
@@ -31,7 +33,17 @@ def home(request):
 
 def import_questions(request):
     esami = Esame.objects.all()
-    return render(request, "studyquiz/import.html", { 'exam_list': esami })
+    if request.method == 'POST':
+        exam_id = request.POST['exam']
+        form = UploadCSVForm(request.POST, request.FILES)
+        if form.is_valid():
+            f = TextIOWrapper(request.FILES['file'].file, encoding='UTF-8-sig', errors='replace')
+            questions_num = FileCSV.handle_CSV(exam_id, f)
+            status = 'OK'
+            return render(request, "studyquiz/import.html", { 'exam_list': esami, 'status': status, 'questions_num': questions_num })
+    else:
+        form = UploadCSVForm()
+    return render(request, 'studyquiz/import.html', {'form': form, 'exam_list': esami })
 
 
 def contact(request):
@@ -55,8 +67,7 @@ def send_exam(request):
         # check whether it's valid:
         if formset.is_valid():
             # process the data in form.cleaned_data as required
-            risposte = [ObjectId(data['risposta_id'])
-                        for data in formset.cleaned_data]
+            risposte = [data['risposta_id'] for data in formset.cleaned_data]
             domande = [data['_id'] for data in formset.cleaned_data]
             request.session['grade'] = Test.grade(risposte)
             request.session['total'] = len(domande)
