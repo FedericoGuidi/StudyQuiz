@@ -4,3 +4,4 @@ env/
 .vscode/
 .DS_Store
 db.sqlite3
+studyquiz/static/studyquiz/images/

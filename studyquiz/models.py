@@ -26,12 +26,14 @@ class Domanda(models.Model):
     esame = models.SlugField()
     domanda = models.SlugField()
     lezione = models.IntegerField()
+    num = models.IntegerField()
     multipla = models.BooleanField()
     risposte = models.ArrayField(
         model_container=Risposta
     )
     risposta = models.TextField()
-    base64 = models.SlugField()
+    image = models.BooleanField()
+
     objects = models.DjongoManager()
 
     class Meta:
@@ -85,12 +87,14 @@ class FileCSV():
                 risposte = None
                 risposta_aperta = row['risposta_1']
             multipla = True if row['num_risposte'] != '0' else False
-            d = Domanda(lezione=row['lezione'], 
+            image = True if row['image'] not in (None, '') else False
+            d = Domanda(lezione=row['lezione'],
+                        num=row['num'], 
                         domanda=row['domanda'],
                         esame=exam,
                         multipla=multipla,
                         risposte=risposte,
                         risposta=risposta_aperta,
-                        base64=row['base64_image'])
+                        image=image)
             d.save()
         return reader.line_num - 1
