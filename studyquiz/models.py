@@ -31,6 +31,7 @@ class Domanda(models.Model):
         model_container=Risposta
     )
     risposta = models.TextField()
+    base64 = models.SlugField()
     objects = models.DjongoManager()
 
     class Meta:
@@ -89,6 +90,7 @@ class FileCSV():
                         esame=exam,
                         multipla=multipla,
                         risposte=risposte,
-                        risposta=risposta_aperta)
+                        risposta=risposta_aperta,
+                        base64=row['base64_image'])
             d.save()
         return reader.line_num - 1
