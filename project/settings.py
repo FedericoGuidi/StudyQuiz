@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,10 +21,12 @@ STATIC_ROOT = BASE_DIR / 'static_collected'
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '*****'
+# SECRET_KEY = 'django-insecure-k_svzp)qne9jz@0%en(1u#dm1=n0t+$n8l&zw=ou3h*wq6l_8q'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-k_svzp)qne9jz@0%en(1u#dm1=n0t+$n8l&zw=ou3h*wq6l_8q')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 ALLOWED_HOSTS = []
 
@@ -74,13 +77,15 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+MONGODB_HOST = os.environ.get('MONGODB_HOST', '')
+
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'db_name',
+        'NAME': 'StudyQuiz',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
-            'host': 'mongodb+srv://<username>:<password>@<cluster>.mongodb.net/test'
+            'host': MONGODB_HOST
         }
     }
 }
