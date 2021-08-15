@@ -1,6 +1,6 @@
 from djongo import models
 from bson import ObjectId
-import csv
+import csv, random
 
 from djongo.models.fields import ObjectIdField
 
@@ -48,8 +48,12 @@ class Test(models.Model):
         self.esame = esame
         self.domande = domande
 
-    def retrieve(exam_id):
-        domande = Domanda.objects.filter(esame=exam_id, multipla=True)
+    def retrieve(exam_id, questions_num):
+        domande = Domanda.objects.none()
+        d_id = Domanda.objects.filter(esame=exam_id, multipla=True).values_list('_id', flat=True)
+        if d_id:
+            r_id = random.sample(list(d_id), questions_num)
+            domande = Domanda.objects.filter(_id__in=r_id)
         esame = Esame.objects.get(pk=ObjectId(exam_id))
         return Test(esame, domande)
 

@@ -52,7 +52,7 @@ def contact(request):
 
 def exam(request):
     exam_id = request.POST['exam']
-    test = Test.retrieve(exam_id)
+    test = Test.retrieve(exam_id, 5)
     DomandaFormSet = modelformset_factory(Domanda, form=DomandaForm, extra=0)
     formset = DomandaFormSet(queryset=test.domande)
     return render(request, "studyquiz/exam.html", {'formset': formset, "exam": test.esame})
