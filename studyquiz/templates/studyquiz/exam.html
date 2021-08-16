@@ -5,7 +5,7 @@ Exam "{{ exam.nome }}"
 {% block content %}
 {% load utility %}
 {% load static %}
-<div class="px-4 py-5 my-5 text-left">
+<div class="px-4 py-5 my-lg-5 text-left">
   <div class="text-center mb-5">
     <p class="lead">Exam </p>
     <h2>{{ exam.nome }}</h2>
@@ -20,8 +20,8 @@ Exam "{{ exam.nome }}"
         {% for form in formset %}
         <li class="mt-3"><strong>{{ form.instance.domanda }}:</strong></li>
         {% if form.instance.image and form.instance.image.strip %}
-        <div class="text-center my-3">
-          <img src="{{ form.instance.image }}" />
+        <div class="text-center my-3 pe-3">
+          <img src="{{ form.instance.image }}" class="img-fluid" />
         </div>
         {% endif %}
         <input type="hidden" name="{{ form.prefix }}-_id" value="{{ form.instance.pk }}" id="id_{{ form.prefix }}-_id">
@@ -30,7 +30,7 @@ Exam "{{ exam.nome }}"
         {{ field }}
         {% else %}
         {% for input in field.subwidgets %}
-        <div class="form-check mb-1">
+        <div class="form-check mb-1 pe-3">
           <input class="form-check-input" type="{{ input.data.type }}" name="{{ input.data.name }}" value="{{ input.data.value }}" id="{{ input.id_for_label }}" {% if input.data.selected %} checked {% endif %} />
           <label class="form-check-label" for="{{ input.id_for_label }}">
             {{ input.choice_label }}
