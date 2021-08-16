@@ -1,0 +1,7 @@
+*/__pycache__/
+__pycache__/
+env/
+.vscode/
+.DS_Store
+db.sqlite3
+studyquiz/static/studyquiz/images/

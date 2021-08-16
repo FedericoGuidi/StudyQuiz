@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{% endblock %}</title>
+  {% load static %}
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'studyquiz/bootstrap/css/bootstrap.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'studyquiz/site.css' %}">
+</head>
+
+<body class="d-flex flex-column vh-100">
+  <header>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'home' %}">StudyQuiz</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
+          aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link" href="{% url 'import' %}">Import</a>
+            <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+          </div>
+          <!-- TODO LOGIN 
+          <div class="form-inline my-2 my-md-0 ms-auto">
+            <a href="{% url 'login' %}" class="form-control btn btn-light" type="submit">Log in</a>
+          </div>
+          -->
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main class="flex-shrink-0">
+    <div class="container">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </main>
+
+  <footer class="footer mt-auto py-3 bg-light">
+    <div class="container">
+      <span class="text-muted">Federico Guidi © 2021</span>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 JS -->
+  {% load static %}
+  <script src="{% static 'studyquiz/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+
+</html>

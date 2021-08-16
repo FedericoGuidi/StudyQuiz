@@ -1,0 +1,44 @@
+{% extends "studyquiz/layout.html" %}
+{% block title %}
+Import questions
+{% endblock %}
+{% block content %}
+<div class="px-4 py-5 my-5 text-left">
+    <div class="col-lg-6 mx-auto">
+        <h3 class="fw-bold">Import questions</h3>
+        <p>Here you can upload a <span class="badge bg-secondary">.csv</span> file containing the questions. <strong>Remember to select the connected exam.</strong></p>
+        
+        <form method="POST" action="{% url 'import' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">Exam</span>
+                <select name="exam" class="form-select">
+                    {% for exam in exam_list %}
+                    <option value="{{ exam.pk }}">{{ exam.nome }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="input-group">
+                <input type="file" name="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                <button class="btn btn-outline-primary" type="submit" id="inputGroupFileAddon04">Upload</button>
+            </div>
+            {{ form.errors }}
+        </form>
+        {% if status == 'OK' %}
+        <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+            <symbol id="check-circle-fill" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+            </symbol>
+        </svg>
+          
+        <div class="alert alert-success d-flex align-items-center mt-5" role="alert">
+            <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Success:"><use xlink:href="#check-circle-fill"/></svg>
+            <div>
+              You have successfully imported {{ questions_num }} questions! <a href="{% url 'home' %}" class="alert-link">Return to the homepage</a>.
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

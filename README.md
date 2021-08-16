@@ -1,2 +1,7 @@
 # StudyQuiz
-StudyQuiz is a Python app that lets you practice and manage any question based test
+StudyQuiz is a Django web application that lets you practice and manage any question based test.
+
+## How it is built
+- Python 3.9.6 with Django
+- MongoDB integration with Djongo
+- Bootstrap 5
