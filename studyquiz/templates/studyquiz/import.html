@@ -3,6 +3,9 @@
 Import questions
 {% endblock %}
 {% block content %}
+{% load utility %}
+{% is_debug as debug %}
+{% if debug %}
 <div class="px-4 py-5 my-5 text-left">
     <div class="col-lg-6 mx-auto">
         <h3 class="fw-bold">Import questions</h3>
@@ -41,4 +44,5 @@ Import questions
         {% endif %}
     </div>
 </div>
+{% endif %}
 {% endblock %}
