@@ -11,7 +11,7 @@ StudyQuiz
     {% if exam_list %}
     <form action="{% url 'exam' %}" method="post">
       {% csrf_token %}
-      <select name="exam" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+      <select name="exam" class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" style="white-space: normal;">
         {% for exam in exam_list %}
         <option value="{{ exam.pk }}">{{ exam.nome }}</option>
         {% endfor %}
