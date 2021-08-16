@@ -32,7 +32,7 @@ class Domanda(models.Model):
         model_container=Risposta
     )
     risposta = models.TextField()
-    image = models.BooleanField()
+    image = models.TextField()
 
     objects = models.DjongoManager()
 
@@ -91,7 +91,6 @@ class FileCSV():
                 risposte = None
                 risposta_aperta = row['risposta_1']
             multipla = True if row['num_risposte'] != '0' else False
-            image = True if row['image'] not in (None, '') else False
             d = Domanda(lezione=row['lezione'],
                         num=row['num'], 
                         domanda=row['domanda'],
@@ -99,6 +98,6 @@ class FileCSV():
                         multipla=multipla,
                         risposte=risposte,
                         risposta=risposta_aperta,
-                        image=image)
+                        image=row['image'])
             d.save()
         return reader.line_num - 1
