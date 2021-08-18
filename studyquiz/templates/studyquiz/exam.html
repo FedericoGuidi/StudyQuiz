@@ -18,28 +18,33 @@ Exam "{{ exam.nome }}"
       {{ formset.management_form }}
       <ol>
         {% for form in formset %}
-        <li class="mt-3"><strong>{{ form.instance.domanda }}:</strong></li>
-        {% if form.instance.image and form.instance.image.strip %}
-        <div class="text-center my-3 pe-3">
-          <img src="{{ form.instance.image }}" class="img-fluid" />
-        </div>
-        {% endif %}
-        <input type="hidden" name="{{ form.prefix }}-_id" value="{{ form.instance.pk }}" id="id_{{ form.prefix }}-_id">
-        {% for field in form %}
-        {% if field.is_hidden %}
-        {{ field }}
-        {% else %}
-        {% for input in field.subwidgets %}
-        <div class="form-check mb-1 pe-3">
-          <input class="form-check-input" type="{{ input.data.type }}" name="{{ input.data.name }}" value="{{ input.data.value }}" id="{{ input.id_for_label }}" {% if input.data.selected %} checked {% endif %} />
-          <label class="form-check-label" for="{{ input.id_for_label }}">
-            {{ input.choice_label }}
-          </label>
-        </div>
-        {% endfor %}
-        {{ field.errors }}
-        {% endif %}
-        {% endfor %}
+          <li class="mt-3"><strong>
+            {% autoescape off %}{{ form.instance.domanda }}{% endautoescape %}:
+          </strong></li>
+          {% if form.instance.image and form.instance.image.strip %}
+            <div class="text-center my-3 pe-3">
+              <img src="{{ form.instance.image }}" class="img-fluid" />
+            </div>
+          {% endif %}
+          <input type="hidden" name="{{ form.prefix }}-_id" value="{{ form.instance.pk }}" id="id_{{ form.prefix }}-_id">
+          {% if form.instance.multipla %}
+            {% for field in form %}
+              {% if field.is_hidden %}
+                {{ field }}
+              {% else %}
+                {% for input in field.subwidgets %}
+                <div class="form-check mb-1 pe-3">
+                  <input class="form-check-input" type="{{ input.data.type }}" name="{{ input.data.name }}" value="{{ input.data.value }}" id="{{ input.id_for_label }}" {% if input.data.selected %} checked {% endif %} />
+                  <label class="form-check-label" for="{{ input.id_for_label }}">
+                    {% autoescape off %}{{ input.choice_label }}{% endautoescape %}
+                  </label>
+                </div>
+                {% endfor %}
+                {{ field.errors }}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+          {% endif %}
         {% endfor %}
       </ol>
 

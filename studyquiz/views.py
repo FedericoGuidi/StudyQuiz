@@ -52,7 +52,18 @@ def contact(request):
 
 def exam(request):
     exam_id = request.POST['exam']
-    test = Test.retrieve(exam_id, 5)
+    multiple_questions_num = request.POST['multiple_questions_num']
+    open_questions_num = request.POST['multiple_questions_num']
+    if multiple_questions_num in (None, ''):
+        multiple_questions_num = 24
+    else:
+        multiple_questions_num = int(multiple_questions_num)
+
+    if open_questions_num in (None, ''):
+        open_questions_num = 0
+    else:
+        open_questions_num = int(open_questions_num)  
+    test = Test.retrieve(exam_id, multiple_questions_num)
     DomandaFormSet = modelformset_factory(Domanda, form=DomandaForm, extra=0)
     formset = DomandaFormSet(queryset=test.domande)
     return render(request, "studyquiz/exam.html", {'formset': formset, "exam": test.esame})

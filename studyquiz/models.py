@@ -78,6 +78,7 @@ class Results(models.Model):
 class FileCSV():
     def handle_CSV(exam, file):
         reader = csv.DictReader(file, delimiter=';')
+        domande = []
         for row in reader:
             risposte_subset = {k:v for k,v in row.items() if k.startswith('risposta_') and (v not in (None, '') or v.strip())}
             if len(risposte_subset) > 1:
@@ -99,5 +100,6 @@ class FileCSV():
                         risposte=risposte,
                         risposta=risposta_aperta,
                         image=row['image'])
-            d.save()
-        return reader.line_num - 1
+            domande.append(d)
+        Domanda.objects.bulk_create(domande)
+        return len(domande)
