@@ -52,12 +52,17 @@ class Test(models.Model):
 
     def retrieve(exam_id, questions_num, open_questions_num):
         domande = Domanda.objects.none()
+        domande_aperte = Domanda.objects.none()
         d_id = Domanda.objects.filter(esame=exam_id, multipla=True).values_list('_id', flat=True)
         od_id = Domanda.objects.filter(esame=exam_id, multipla=False).values_list('_id', flat=True)
         if d_id:
+            if len(d_id) < questions_num:
+                questions_num = len(d_id)
             r_id = random.sample(list(d_id), questions_num)
             domande = Domanda.objects.filter(_id__in=r_id)
         if od_id:
+            if len(od_id) < open_questions_num:
+                open_questions_num = len(od_id)
             or_id = random.sample(list(od_id), open_questions_num)
             domande_aperte = Domanda.objects.filter(_id__in=or_id)
         esame = Esame.objects.get(pk=ObjectId(exam_id))
