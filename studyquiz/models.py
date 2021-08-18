@@ -43,19 +43,25 @@ class Domanda(models.Model):
 class Test(models.Model):
     esame = Esame
     domande = []
+    domande_aperte = []
 
-    def __init__(self, esame, domande):
+    def __init__(self, esame, domande, domande_aperte):
         self.esame = esame
         self.domande = domande
+        self.domande_aperte = domande_aperte
 
-    def retrieve(exam_id, questions_num):
+    def retrieve(exam_id, questions_num, open_questions_num):
         domande = Domanda.objects.none()
         d_id = Domanda.objects.filter(esame=exam_id, multipla=True).values_list('_id', flat=True)
+        od_id = Domanda.objects.filter(esame=exam_id, multipla=False).values_list('_id', flat=True)
         if d_id:
             r_id = random.sample(list(d_id), questions_num)
             domande = Domanda.objects.filter(_id__in=r_id)
+        if od_id:
+            or_id = random.sample(list(od_id), open_questions_num)
+            domande_aperte = Domanda.objects.filter(_id__in=or_id)
         esame = Esame.objects.get(pk=ObjectId(exam_id))
-        return Test(esame, domande)
+        return Test(esame, domande, domande_aperte)
 
     def grade(risposte_id):
         risposte_corrette = Domanda.objects.mongo_find(
