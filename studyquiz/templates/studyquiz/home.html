@@ -3,10 +3,10 @@
 StudyQuiz
 {% endblock %}
 {% block content %}
-<div class="px-4 py-5 my-5 text-center">
-  <h1 class="display-5 fw-bold">StudyQuiz</h1>
+<div class="px-4 py-5 my-5">
+  <h1 class="display-5 fw-bold text-center">StudyQuiz</h1>
   <div class="col-lg-6 mx-auto">
-    <p class="lead mb-4">Choose one exam from the list below:</p>
+    <p class="lead mb-4 text-center">Choose one exam from the list below:</p>
 
     {% if exam_list %}
     <form action="{% url 'exam' %}" method="post">
@@ -17,8 +17,40 @@ StudyQuiz
         {% endfor %}
       </select>
 
+      <!-- Modal for options -->
+      <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="settingsModal">Settings</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row mb-3">
+                <label for="questionsNumber" class="col-sm-5 col-form-label"># multiple questions</label>
+                <div class="col-sm-7">
+                  <input type="number" class="form-control" id="questionsNumber" placeholder="Default is 24" name="multiple_questions_num">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="questionsNumber" class="col-sm-5 col-form-label"># open questions</label>
+                <div class="col-sm-7">
+                  <input type="number" class="form-control" id="questionsNumber" placeholder="Default is 3" name="open_questions_num">
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-        <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Start!</button>
+        <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#settingsModal">
+           Settings <i class="bi-sliders ms-1"></i>
+        </button>
+        <button type="submit" class="btn btn-primary btn-lg px-4 gap-3">Start! <i class="bi-play-circle ms-1"></i></button>
       </div>
     </form>
     {% else %}
@@ -26,8 +58,7 @@ StudyQuiz
       No exams found!
     </div>
     {% endif %}
-
-
   </div>
 </div>
+
 {% endblock %}
