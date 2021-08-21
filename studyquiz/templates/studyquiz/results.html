@@ -3,12 +3,12 @@
 Results
 {% endblock %}
 {% block content %}
-<div class="px-4 py-5 my-5 text-center">
-    <h2 class="display-5 fw-bold">Results</h2>
+<div class="px-4 py-5 my-5">
+    <h2 class="display-5 fw-bold text-center">Results</h2>
     <div class="col-lg-6 mx-auto">
-        <p class="lead mb-4">You scored:</p>
+        <p class="lead mb-4 text-center">You scored:</p>
 
-        <div class="flex-wrapper">
+        <div class="flex-wrapper text-center">
             <div class="single-chart m-auto">
                 <svg viewBox="0 0 36 36" class="circular-chart">
                     <path class="circle-bg" d="M18 2.0845
@@ -26,8 +26,59 @@ Results
             </div>
         </div>
 
-        <div class="mt-5">
-            <a href="{% url 'home' %}" class="btn btn-outline-primary">Return to the homepage</a>
+        <div class="d-grid gap-2 mt-5 col-lg-6 mx-auto text-center">
+            <button type="button" class="btn btn-outline-primary btn-lg" data-bs-toggle="modal" data-bs-target="#resultsModal">
+                Show details <i class="bi-list-check ms-1"></i>
+            </button>
+            <a href="{% url 'home' %}" class="btn btn-primary">Return to the homepage <i class="bi-house ms-1"></i></a>
+        </div>
+
+        <!-- Modal for Results -->
+        <div class="modal fade" id="resultsModal" tabindex="-1" aria-labelledby="resultsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="resultsModal">Results Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <ol>
+                            {% for domanda in results.domande %}
+                                <li class="fw-bold mt-3"><span class="badge bg-primary">Lesson {{ domanda.lezione }}</span> <span class="badge bg-secondary"># {{ domanda.num }}</span> {{ domanda.domanda }}</li>
+                                {% for risposta in domanda.risposte %}
+                                    <div class="d-flex flex-row">
+                                        {% if risposta.corretta %}
+                                            <div class="text-success">
+                                                <i class="bi-check-circle-fill"></i>
+                                            </div>
+                                            <div class="ps-2 text-success">
+                                                {{ risposta.testo }}
+                                            </div>
+                                        {% elif risposta.pk in results.risposte %}
+                                            <div class="text-danger">
+                                                <i class="bi-x-circle-fill"></i>
+                                            </div>
+                                            <div class="ps-2 text-danger">
+                                                {{ risposta.testo }}
+                                            </div>
+                                        {% else %}
+                                            <div class="text-secondary">
+                                                <i class="bi-circle"></i>
+                                            </div>
+                                            <div class="ps-2">
+                                                {{ risposta.testo }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% endfor %}
+                        </ol>
+                    </div>
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

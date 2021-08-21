@@ -68,10 +68,11 @@ class Test(models.Model):
         esame = Esame.objects.get(pk=ObjectId(exam_id))
         return Test(esame, domande, domande_aperte)
 
-    def grade(risposte_id):
+    def grade(domande_id, risposte_id):
         risposte_corrette = Domanda.objects.mongo_find(
             {"risposte": {"$elemMatch": {"_id": {"$in": risposte_id}, "corretta": True}}}
         )
+
         return risposte_corrette.count()
 
 
@@ -79,11 +80,15 @@ class Results(models.Model):
     grade = models.IntegerField()
     total = models.IntegerField()
     percent = models.FloatField()
+    domande = []
+    risposte = []
 
-    def __init__(self, grade, total, percent):
+    def __init__(self, grade, total, domande, risposte):
         self.grade = grade
         self.total = total
-        self.percent = percent
+        self.percent = (grade * 100) / total
+        self.domande = Domanda.objects.filter(_id__in=domande)
+        self.risposte = risposte
 
 
 class FileCSV():
