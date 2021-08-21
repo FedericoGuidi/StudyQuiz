@@ -24,8 +24,12 @@ Import questions
 
             <div class="input-group">
                 <input type="file" name="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-                <button class="btn btn-outline-primary" type="submit" id="inputGroupFileAddon04">Upload</button>
             </div>
+
+            <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mt-3">
+                <button class="btn btn-primary btn-lg" type="submit">Upload <i class="bi-cloud-upload ms-1"></i></button>
+            </div>
+
             {{ form.errors }}
         </form>
         {% if status == 'OK' %}
