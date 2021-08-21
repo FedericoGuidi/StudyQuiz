@@ -4,11 +4,12 @@ from studyquiz.forms import DomandaForm, UploadCSVForm
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.forms import modelformset_factory
-from bson import ObjectId
+from bson import ObjectId, json_util
+import json
 
 from datetime import datetime
 
-from studyquiz.models import Domanda, Esame, Results, Test, FileCSV
+from studyquiz.models import Domanda, Esame, Results, Risposta, Test, FileCSV
 
 
 class HomeListView(generic.ListView):
@@ -79,9 +80,11 @@ def send_exam(request):
         if formset.is_valid():
             # process the data in form.cleaned_data as required
             risposte = [data['risposta_id'] for data in formset.cleaned_data]
-            domande = [data['_id'] for data in formset.cleaned_data]
-            request.session['grade'] = Test.grade(risposte)
+            domande = [str(data['_id'].pk) for data in formset.cleaned_data]
+            request.session['grade'] = Test.grade(domande, risposte)
             request.session['total'] = len(domande)
+            request.session['domande'] = domande
+            request.session['risposte'] = risposte
             # redirect to a new URL:
             return redirect('/results/')
         else:
@@ -97,8 +100,12 @@ def send_exam(request):
 def results(request):
     grade = request.session.get('grade')
     total = request.session.get('total')
-    percent = (grade * 100) / total
-    results = Results(grade, total, percent)
+    domande = request.session.get('domande')
+    risposte = request.session.get('risposte')
+    domande_id = []
+    for d in domande:
+        domande_id.append(ObjectId(d))
+    results = Results(grade, total, domande_id, risposte)
     return render(request, "studyquiz/results.html", {'results': results})
 
 
