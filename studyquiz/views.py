@@ -1,15 +1,11 @@
 from io import TextIOWrapper
-from django.http.response import HttpResponseRedirect
 from studyquiz.forms import DomandaForm, UploadCSVForm
 from django.shortcuts import redirect, render
 from django.views import generic
 from django.forms import modelformset_factory
-from bson import ObjectId, json_util
-import json
+from bson import ObjectId
 
-from datetime import datetime
-
-from studyquiz.models import Domanda, Esame, Results, Risposta, Test, FileCSV
+from studyquiz.models import Domanda, Esame, Results, Test, FileCSV
 
 
 class HomeListView(generic.ListView):
