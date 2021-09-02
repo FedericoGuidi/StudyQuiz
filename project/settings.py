@@ -35,6 +35,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'studyquiz',
+    'social_django',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,6 +43,25 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles'
 ]
+
+SOCIAL_AUTH_TRAILING_SLASH = False  # Remove trailing slash from routes
+SOCIAL_AUTH_AUTH0_DOMAIN = 'federicodev.eu.auth0.com'
+SOCIAL_AUTH_AUTH0_KEY = os.environ.get('AUTH0_KEY', '')
+SOCIAL_AUTH_AUTH0_SECRET = os.environ.get('AUTH0_SECRET', '')
+
+SOCIAL_AUTH_AUTH0_SCOPE = [
+    'openid',
+    'profile',
+    'email'
+]
+
+LOGIN_URL = '/login/auth0'
+LOGIN_REDIRECT_URL = '/'
+
+AUTHENTICATION_BACKENDS = {
+    'studyquiz.auth0backend.Auth0',
+    'django.contrib.auth.backends.ModelBackend'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

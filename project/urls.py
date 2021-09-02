@@ -18,5 +18,7 @@ from django.urls import include, path
 
 urlpatterns = [
     path("", include("studyquiz.urls")),
-    path('admin/', admin.site.urls)
+    path('admin/', admin.site.urls),
+    path('', include('django.contrib.auth.urls')),
+    path('', include('social_django.urls'))
 ]
