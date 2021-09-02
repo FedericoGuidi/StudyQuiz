@@ -30,11 +30,30 @@
             {% endif %}
             <a class="nav-link" href="{% url 'contact' %}">Contact</a>
           </div>
-          <!-- TODO LOGIN 
+
+          <!-- TODO LOGIN -->
           <div class="form-inline my-2 my-md-0 ms-auto">
-            <a href="{% url 'login' %}" class="form-control btn btn-light" type="submit">Log in</a>
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span class="text-white">{{ user.first_name }} <i class="bi-person-circle"></i></span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="#">Settings</a></li>
+                  {% if user.is_staff %}
+                  <li><a class="dropdown-item" href="{% url 'admin:index' %}">Admin panel</a></li>
+                  {% endif %}
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+              
+            {% else %}
+              <a href="/login/auth0" class="form-control btn btn-light" type="submit">Log in</a>
+            {% endif %}
           </div>
-          -->
         </div>
       </div>
     </nav>

@@ -10,6 +10,10 @@ class Esame(models.Model):
 
     class Meta:
         db_table = 'Esami'
+        verbose_name_plural = 'Esami'
+    
+    def __str__(self):
+        return f"{self.nome}"
 
 
 class Risposta(models.Model):
@@ -38,6 +42,10 @@ class Domanda(models.Model):
 
     class Meta:
         db_table = 'Domande'
+        verbose_name_plural = 'Domande'
+
+    def __str__(self):
+        return f"Domanda #{self.num} - Lezione {self.lezione}"
 
 
 class Test(models.Model):

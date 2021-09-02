@@ -7,6 +7,11 @@ from bson import ObjectId
 
 from studyquiz.models import Domanda, Esame, Results, Test, FileCSV
 
+from django.contrib.auth import logout as log_out
+from django.conf import settings
+from django.http import HttpResponseRedirect
+from urllib.parse import urlencode
+
 
 class HomeListView(generic.ListView):
     """Renders the home page, with a list of all exams."""
@@ -52,12 +57,12 @@ def exam(request):
     multiple_questions_num = request.POST['multiple_questions_num']
     open_questions_num = request.POST['open_questions_num']
     if multiple_questions_num in (None, ''):
-        multiple_questions_num = 24
+        multiple_questions_num = 23
     else:
         multiple_questions_num = int(multiple_questions_num)
 
     if open_questions_num in (None, ''):
-        open_questions_num = 3
+        open_questions_num = 2
     else:
         open_questions_num = int(open_questions_num)  
     test = Test.retrieve(exam_id, multiple_questions_num, open_questions_num)
@@ -105,5 +110,9 @@ def results(request):
     return render(request, "studyquiz/results.html", {'results': results})
 
 
-def login(request):
-    return render(request, "studyquiz/login.html")
+def logout(request):
+    log_out(request)
+    return_to = urlencode({'returnTo': request.build_absolute_uri('/')})
+    logout_url = 'https://%s/v2/logout?client_id=%s&%s' % \
+                 (settings.SOCIAL_AUTH_AUTH0_DOMAIN, settings.SOCIAL_AUTH_AUTH0_KEY, return_to)
+    return HttpResponseRedirect(logout_url)
