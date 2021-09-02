@@ -57,12 +57,12 @@ def exam(request):
     multiple_questions_num = request.POST['multiple_questions_num']
     open_questions_num = request.POST['open_questions_num']
     if multiple_questions_num in (None, ''):
-        multiple_questions_num = 24
+        multiple_questions_num = 23
     else:
         multiple_questions_num = int(multiple_questions_num)
 
     if open_questions_num in (None, ''):
-        open_questions_num = 3
+        open_questions_num = 2
     else:
         open_questions_num = int(open_questions_num)  
     test = Test.retrieve(exam_id, multiple_questions_num, open_questions_num)
