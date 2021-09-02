@@ -5,7 +5,7 @@ Import questions
 {% block content %}
 {% load utility %}
 {% is_debug as debug %}
-{% if debug %}
+{% if debug or user.is_staff %}
 <div class="px-4 py-5 my-5 text-left">
     <div class="col-lg-6 mx-auto">
         <h3 class="fw-bold">Import questions</h3>
