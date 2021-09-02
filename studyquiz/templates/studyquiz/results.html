@@ -44,7 +44,7 @@ Results
                     <div class="modal-body">
                         <ol>
                             {% for domanda in results.domande %}
-                                <li class="fw-bold mt-3"><span class="badge bg-primary">Lesson {{ domanda.lezione }}</span> <span class="badge bg-secondary"># {{ domanda.num }}</span> {{ domanda.domanda }}</li>
+                                <li class="fw-bold mt-3"><span class="badge bg-primary">Lesson {{ domanda.lezione }}</span> <span class="badge bg-secondary"># {{ domanda.num }}</span> {% autoescape off %}{{ domanda.domanda }}{% endautoescape %}</li>
                                 {% for risposta in domanda.risposte %}
                                     <div class="d-flex flex-row">
                                         {% if risposta.corretta %}
@@ -52,21 +52,21 @@ Results
                                                 <i class="bi-check-circle-fill"></i>
                                             </div>
                                             <div class="ps-2 text-success">
-                                                {{ risposta.testo }}
+                                                {% autoescape off %}{{ risposta.testo }}{% endautoescape %}
                                             </div>
                                         {% elif risposta.pk in results.risposte %}
                                             <div class="text-danger">
                                                 <i class="bi-x-circle-fill"></i>
                                             </div>
                                             <div class="ps-2 text-danger">
-                                                {{ risposta.testo }}
+                                                {% autoescape off %}{{ risposta.testo }}{% endautoescape %}
                                             </div>
                                         {% else %}
                                             <div class="text-secondary">
                                                 <i class="bi-circle"></i>
                                             </div>
                                             <div class="ps-2">
-                                                {{ risposta.testo }}
+                                                {% autoescape off %}{{ risposta.testo }}{% endautoescape %}
                                             </div>
                                         {% endif %}
                                     </div>
