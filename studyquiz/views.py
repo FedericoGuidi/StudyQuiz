@@ -104,9 +104,12 @@ def results(request):
     domande = request.session.get('domande')
     risposte = request.session.get('risposte')
     domande_id = []
+    risposte_id = []
     for d in domande:
         domande_id.append(ObjectId(d))
-    results = Results(grade, total, domande_id, risposte)
+    for r in risposte:
+        risposte_id.append(ObjectId(r))
+    results = Results(grade, total, domande_id, risposte_id)
     return render(request, "studyquiz/results.html", {'results': results})
 
 

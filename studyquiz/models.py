@@ -6,7 +6,7 @@ from djongo.models.fields import ObjectIdField
 
 class Esame(models.Model):
     _id = models.ObjectIdField()
-    nome = models.SlugField()
+    nome = models.CharField(max_length=255)
 
     class Meta:
         db_table = 'Esami'
@@ -17,8 +17,8 @@ class Esame(models.Model):
 
 
 class Risposta(models.Model):
-    _id = models.SlugField(primary_key=True)
-    testo = models.SlugField()
+    _id = models.ObjectIdField()
+    testo = models.CharField(max_length=255)
     corretta = models.BooleanField()
 
     class Meta:
@@ -27,16 +27,16 @@ class Risposta(models.Model):
 
 class Domanda(models.Model):
     _id = models.ObjectIdField()
-    esame = models.SlugField()
-    domanda = models.SlugField()
+    esame = models.CharField(max_length=255)
+    domanda = models.CharField(max_length=255)
     lezione = models.IntegerField()
     num = models.IntegerField()
     multipla = models.BooleanField()
     risposte = models.ArrayField(
         model_container=Risposta
     )
-    risposta = models.TextField()
-    image = models.TextField()
+    risposta = models.TextField(blank=True)
+    image = models.TextField(blank=True)
 
     objects = models.DjongoManager()
 
@@ -50,8 +50,8 @@ class Domanda(models.Model):
 
 class Test(models.Model):
     esame = Esame
-    domande = []
-    domande_aperte = []
+    domande = None
+    domande_aperte = None
 
     def __init__(self, esame, domande, domande_aperte):
         self.esame = esame
