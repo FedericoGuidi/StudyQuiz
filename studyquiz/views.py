@@ -5,9 +5,9 @@ from django.views import generic
 from django.forms import modelformset_factory
 from bson import ObjectId
 
-from studyquiz.models import Domanda, Esame, Results, Test, FileCSV
+from studyquiz.models import Domanda, Esame, Results, Test, FileCSV, Utenti
 
-from django.contrib.auth import logout as log_out
+from django.contrib.auth import get_user, logout as log_out
 from django.conf import settings
 from django.http import HttpResponseRedirect
 from urllib.parse import urlencode
@@ -50,6 +50,16 @@ def import_questions(request):
 
 def contact(request):
     return render(request, "studyquiz/contact.html")
+
+
+def questions(request):
+    return render(request, "studyquiz/questions.html")
+
+
+def dashboard(request):
+    user = get_user(request)
+    user_info = Utenti.retrieve(user.id)
+    return render(request, "studyquiz/dashboard.html", { 'user_info': user_info })
 
 
 def exam(request):
