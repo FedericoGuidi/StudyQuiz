@@ -1,4 +1,5 @@
 from io import TextIOWrapper
+import random
 from studyquiz.forms import DomandaForm, UploadCSVForm
 from django.shortcuts import redirect, render
 from django.views import generic
