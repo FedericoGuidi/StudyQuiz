@@ -70,11 +70,11 @@ class Test(models.Model):
         self.domande = domande
         self.domande_aperte = domande_aperte
 
-    def retrieve(exam_id, questions_num, open_questions_num):
+    def retrieve(exam_id, questions_num, open_questions_num, from_lesson, to_lesson):
         domande = Domanda.objects.none()
         domande_aperte = Domanda.objects.none()
-        d_id = Domanda.objects.filter(esame=exam_id, multipla=True).values_list('_id', flat=True)
-        od_id = Domanda.objects.filter(esame=exam_id, multipla=False).values_list('_id', flat=True)
+        d_id = Domanda.objects.filter(esame=exam_id, multipla=True, lezione__gte=from_lesson, lezione__lte=to_lesson).values_list('_id', flat=True)
+        od_id = Domanda.objects.filter(esame=exam_id, multipla=False, lezione__gte=from_lesson, lezione__lte=to_lesson).values_list('_id', flat=True)
         if d_id:
             if len(d_id) < questions_num:
                 questions_num = len(d_id)

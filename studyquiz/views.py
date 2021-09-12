@@ -66,6 +66,8 @@ def exam(request):
     exam_id = request.POST['exam']
     multiple_questions_num = request.POST['multiple_questions_num']
     open_questions_num = request.POST['open_questions_num']
+    from_lesson = request.POST['from_lesson']
+    to_lesson = request.POST['to_lesson']
     if multiple_questions_num in (None, ''):
         multiple_questions_num = 23
     else:
@@ -74,8 +76,19 @@ def exam(request):
     if open_questions_num in (None, ''):
         open_questions_num = 2
     else:
-        open_questions_num = int(open_questions_num)  
-    test = Test.retrieve(exam_id, multiple_questions_num, open_questions_num)
+        open_questions_num = int(open_questions_num)
+
+    if from_lesson in (None, ''):
+        from_lesson = 0
+    else:
+        from_lesson = int(from_lesson)
+
+    if to_lesson in (None, ''):
+        to_lesson = 999
+    else:
+        to_lesson = int(to_lesson)
+
+    test = Test.retrieve(exam_id, multiple_questions_num, open_questions_num, from_lesson, to_lesson)
     DomandaFormSet = modelformset_factory(Domanda, form=DomandaForm, extra=0)
     formset = DomandaFormSet(queryset=test.domande)
     return render(request, "studyquiz/exam.html", {'formset': formset, "exam": test.esame, "domande_aperte": test.domande_aperte})

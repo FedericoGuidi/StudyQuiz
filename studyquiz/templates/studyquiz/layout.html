@@ -28,9 +28,9 @@
             {% if debug or user.is_staff %}
               <a class="nav-link" href="{% url 'import' %}">Import</a>
             {% endif %}
-            {% if user.is_authenticated %}
+            <!--{% if user.is_authenticated %}
               <a class="nav-link" href="#">Questions</a>
-            {% endif %}
+            {% endif %}-->
             <a class="nav-link" href="{% url 'contact' %}">Contact</a>
           </div>
 
