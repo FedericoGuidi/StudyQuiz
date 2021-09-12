@@ -1,8 +1,8 @@
+from django.contrib.postgres.fields.array import ArrayField
 from djongo import models
 from bson import ObjectId
 import csv, random
 
-from djongo.models.fields import ObjectIdField
 
 class Esame(models.Model):
     _id = models.ObjectIdField()
@@ -18,6 +18,15 @@ class Esame(models.Model):
 
 class Risposta(models.Model):
     _id = models.ObjectIdField()
+    testo = models.CharField(max_length=255)
+    corretta = models.BooleanField()
+
+    class Meta:
+        abstract = True
+
+
+class RispostaImport(models.Model):
+    _id = models.CharField(max_length=100, primary_key=True)
     testo = models.CharField(max_length=255)
     corretta = models.BooleanField()
 
@@ -47,6 +56,9 @@ class Domanda(models.Model):
     def __str__(self):
         return f"Domanda #{self.num} - Lezione {self.lezione}"
 
+    def open_questions_count(id):
+        return Domanda.objects.filter(esame=id, multipla=False).count()
+
 
 class Test(models.Model):
     esame = Esame
@@ -58,11 +70,11 @@ class Test(models.Model):
         self.domande = domande
         self.domande_aperte = domande_aperte
 
-    def retrieve(exam_id, questions_num, open_questions_num):
+    def retrieve(exam_id, questions_num, open_questions_num, from_lesson, to_lesson):
         domande = Domanda.objects.none()
         domande_aperte = Domanda.objects.none()
-        d_id = Domanda.objects.filter(esame=exam_id, multipla=True).values_list('_id', flat=True)
-        od_id = Domanda.objects.filter(esame=exam_id, multipla=False).values_list('_id', flat=True)
+        d_id = Domanda.objects.filter(esame=exam_id, multipla=True, lezione__gte=from_lesson, lezione__lte=to_lesson).values_list('_id', flat=True)
+        od_id = Domanda.objects.filter(esame=exam_id, multipla=False, lezione__gte=from_lesson, lezione__lte=to_lesson).values_list('_id', flat=True)
         if d_id:
             if len(d_id) < questions_num:
                 questions_num = len(d_id)
@@ -110,7 +122,7 @@ class FileCSV():
                 risposta_aperta = None
                 for key, risposta in risposte_subset.items():
                     corretta = True if row['num_corretta'] == key[-1] else False
-                    r = Risposta(_id=ObjectId(), testo=risposta, corretta=corretta)
+                    r = RispostaImport(_id=ObjectId(), testo=risposta, corretta=corretta)
                     risposte.append(r)
             else:
                 risposte = None
@@ -127,3 +139,30 @@ class FileCSV():
             domande.append(d)
         Domanda.objects.bulk_create(domande)
         return len(domande)
+
+
+class RispostaAperta(models.Model):
+        domanda = models.TextField()
+        risposta = models.TextField()
+
+        class Meta:
+            abstract = True
+
+
+class Utenti(models.Model):
+    _id = models.ObjectIdField()
+    user_id = models.IntegerField()
+    registered_exams = ArrayField(models.CharField(max_length=100))
+    risposte = models.ArrayField(model_container=RispostaAperta)
+
+    class Meta:
+        db_table = 'Utenti'
+
+
+    def retrieve(id):
+        user_info = Utenti.objects.get(user_id=id)
+        user_info.registered_exams = Esame.objects.filter(_id__in=user_info.registered_exams)
+        for risposta in user_info.risposte:
+            risposta.domanda = Domanda.objects.filter(_id=risposta.domanda).first()
+        return user_info
+    
