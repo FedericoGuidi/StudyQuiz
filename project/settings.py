@@ -160,4 +160,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-ALLOWED_HOSTS = ['study-quiz.herokuapp.com','127.0.0.1']
+ALLOWED_HOSTS = ['https://fguidi.azurewebsites.net/', 'study-quiz.herokuapp.com','127.0.0.1']
