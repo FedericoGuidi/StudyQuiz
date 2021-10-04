@@ -71,3 +71,7 @@
     font-size: 0.5em;
     text-anchor: middle;
   }
+
+  .text-lightest-grey {
+    color: #C0C0C0 !important;
+  }

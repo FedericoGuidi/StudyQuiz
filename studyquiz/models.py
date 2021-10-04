@@ -59,6 +59,10 @@ class Domanda(models.Model):
     def open_questions_count(id):
         return Domanda.objects.filter(esame=id, multipla=False).count()
 
+    def retrieve_questions(id):
+        domanda = Domanda.objects.get(_id=id)
+        return domanda.risposte
+
 
 class Test(models.Model):
     esame = Esame

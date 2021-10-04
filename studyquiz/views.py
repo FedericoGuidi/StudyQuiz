@@ -2,6 +2,7 @@ from io import TextIOWrapper
 import random
 from studyquiz.forms import DomandaForm, UploadCSVForm
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_GET
 from django.views import generic
 from django.forms import modelformset_factory
 from bson import ObjectId
@@ -69,6 +70,8 @@ def exam(request):
     open_questions_num = request.POST['open_questions_num']
     from_lesson = request.POST['from_lesson']
     to_lesson = request.POST['to_lesson']
+    practice_mode = 'practice_mode' in request.POST
+
     if multiple_questions_num in (None, ''):
         multiple_questions_num = 23
     else:
@@ -92,7 +95,8 @@ def exam(request):
     test = Test.retrieve(exam_id, multiple_questions_num, open_questions_num, from_lesson, to_lesson)
     DomandaFormSet = modelformset_factory(Domanda, form=DomandaForm, extra=0)
     formset = DomandaFormSet(queryset=test.domande)
-    return render(request, "studyquiz/exam.html", {'formset': formset, "exam": test.esame, "domande_aperte": test.domande_aperte})
+    view = "studyquiz/practice.html" if practice_mode else "studyquiz/exam.html"
+    return render(request, view, {'formset': formset, "exam": test.esame, "domande_aperte": test.domande_aperte})
 
 
 def send_exam(request):
@@ -135,6 +139,15 @@ def results(request):
         risposte_id.append(ObjectId(r))
     results = Results(grade, total, domande_id, risposte_id)
     return render(request, "studyquiz/results.html", {'results': results})
+
+
+def check_answer(request):
+    question = request.GET['question']
+    answer = request.GET['answer']
+    ordered_answers = request.GET.getlist('ordered_answers[]')
+    risposte = Domanda.retrieve_questions(question)
+    risposte = [risposta for a in ordered_answers for risposta in risposte if risposta.pk == ObjectId(a)]
+    return render(request, "studyquiz/_correct_answer.html", {'risposte': risposte, 'selected_answer': ObjectId(answer) })
 
 
 def logout(request):
