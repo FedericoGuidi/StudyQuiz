@@ -75,13 +75,11 @@ Exam "{{ exam.nome }}"
         {% endfor %}
       </ol>
 
-      <div class="d-flex justify-content-center">
-        <div class="me-auto">
+      <div class="d-grid gap-2 mt-5 col-lg-4 mx-auto text-center">
+          <button type="submit" class="btn btn-primary btn-lg">
+              Finish <i class="bi-check-circle ms-1"></i>
+          </button>
           <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
-        </div>
-        <div>
-          <button type="submit" class="btn btn-primary">Finish</button>
-        </div>
       </div>
 
     </form>
