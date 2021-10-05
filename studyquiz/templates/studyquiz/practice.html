@@ -85,6 +85,23 @@ Practice "{{ exam.nome }}"
         {% endfor %}
       </ol>
 
+      <p class="lead mt-5 mb-4 text-center">Current score</p>
+      <div class="flex-wrapper text-center">
+          <div class="single-chart m-auto">
+            <svg viewBox="0 0 36 36" class="circular-chart">
+                    <path class="circle-bg" d="M18 2.0845
+                        a 15.9155 15.9155 0 0 1 0 31.831
+                        a 15.9155 15.9155 0 0 1 0 -31.831" />
+                      <path id="circle-progress" class="circle" stroke-dasharray="0, 100" d="" />
+                    <text x="18" y="20.35" class="percentage" id="chart-score">
+                       0 / {{ formset|length }}
+                    </text>
+                </svg>
+                <input type="hidden" id="current-score" value="0">
+                <input type="hidden" id="total-questions" value="{{ formset|length }}">
+          </div>
+      </div>
+
       <div class="d-grid gap-2 mt-5 col-lg-4 mx-auto text-center">
           <button type="button" class="btn btn-primary btn-lg">
               Retry <i class="bi-arrow-counterclockwise ms-1"></i>
@@ -107,6 +124,17 @@ Practice "{{ exam.nome }}"
 
 {% block javascript %}
   <script>
+      function updateScore(point) {
+        var totalQuestions = $("#total-questions").val();
+        var currentScore = $("#current-score").val();
+        var newScore = parseInt(currentScore) + point;
+        var text = newScore + " / " + totalQuestions;
+        var percentage = ((newScore / totalQuestions) * 100).toFixed(2);
+        $("#current-score").val(newScore)
+        $("#chart-score").html(text);
+        if (newScore == 1) $("#circle-progress").attr("d", "M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831")
+        $("#circle-progress").attr("stroke-dasharray", percentage + ", 100"); 
+      }
 
       $("input[type=radio]").change(function () {
         var selected_answer = $(this).val();
@@ -132,6 +160,7 @@ Practice "{{ exam.nome }}"
             else {
               $("#count-" + question).addClass("bg-danger");
             }
+            updateScore(data.point);
             $("#spinner-" + question).addClass("d-none");
           },
           error: function(data) {
