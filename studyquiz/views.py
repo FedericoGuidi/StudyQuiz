@@ -1,8 +1,10 @@
 from io import TextIOWrapper
 import random
+
+from django.http.response import HttpResponse, JsonResponse
+from django.template.loader import render_to_string
 from studyquiz.forms import DomandaForm, UploadCSVForm
 from django.shortcuts import redirect, render
-from django.views.decorators.http import require_GET
 from django.views import generic
 from django.forms import modelformset_factory
 from bson import ObjectId
@@ -147,7 +149,11 @@ def check_answer(request):
     ordered_answers = request.GET.getlist('ordered_answers[]')
     risposte = Domanda.retrieve_questions(question)
     risposte = [risposta for a in ordered_answers for risposta in risposte if risposta.pk == ObjectId(a)]
-    return render(request, "studyquiz/_correct_answer.html", {'risposte': risposte, 'selected_answer': ObjectId(answer) })
+    correct_answer = next((r for r in risposte if r.corretta), None)
+    data = {}
+    data['html'] = render_to_string(request=request, template_name="studyquiz/_correct_answer.html", context={'risposte': risposte, 'selected_answer': ObjectId(answer) })
+    data['point'] = 1 if correct_answer.pk == ObjectId(answer) else 0
+    return JsonResponse(data)
 
 
 def logout(request):
