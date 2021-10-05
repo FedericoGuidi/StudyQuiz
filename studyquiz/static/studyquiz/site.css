@@ -75,3 +75,7 @@
   .text-lightest-grey {
     color: #C0C0C0 !important;
   }
+
+  .bg-white-50 {
+    background-color: #ffffffaf;
+  }

@@ -38,25 +38,32 @@ Practice "{{ exam.nome }}"
               {% if field.is_hidden %}
                 {{ field }}
               {% else %}
-                <div id="risposte-{{ form.instance.pk }}">
-                  {% for input in field.subwidgets|shuffle %}
-                  <div class="form-check mb-1 pe-3">
-                    <input class="form-check-input" type="{{ input.data.type }}" name="{{ input.data.name }}" value="{{ input.data.value }}" id="{{ input.id_for_label }}" {% if input.data.selected %} checked {% endif %} />
-                    <label class="form-check-label" for="{{ input.id_for_label }}">
-                      {% autoescape off %}{{ input.choice_label }}{% endautoescape %}
-                    </label>
+                <div id="wrapper-{{ form.instance.pk }}" class="position-relative">
+                  <div id="spinner-{{ form.instance.pk }}" class="d-flex justify-content-center align-items-center position-absolute w-100 h-100 bg-white-50 d-none">
+                    <div class="spinner-border text-primary" role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
                   </div>
-                  {% endfor %}
-                  {% if field.errors %}
-                    {% for error in field.errors %}
-                      <div class="alert alert-warning d-flex align-items-center mt-2" role="alert">
-                        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-                        <div>
-                          {{ error }}
-                        </div>
-                      </div>
+                  <div id="risposte-{{ form.instance.pk }}">
+                    {% for input in field.subwidgets|shuffle %}
+                    <div class="form-check mb-1 pe-3">
+                      <input class="form-check-input" type="{{ input.data.type }}" name="{{ input.data.name }}" value="{{ input.data.value }}" id="{{ input.id_for_label }}" {% if input.data.selected %} checked {% endif %} />
+                      <label class="form-check-label" for="{{ input.id_for_label }}">
+                        {% autoescape off %}{{ input.choice_label }}{% endautoescape %}
+                      </label>
+                    </div>
                     {% endfor %}
-                  {% endif %}
+                    {% if field.errors %}
+                      {% for error in field.errors %}
+                        <div class="alert alert-warning d-flex align-items-center mt-2" role="alert">
+                          <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+                          <div>
+                            {{ error }}
+                          </div>
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+                  </div>
                 </div>
               {% endif %}
             {% endfor %}
@@ -78,14 +85,6 @@ Practice "{{ exam.nome }}"
         {% endfor %}
       </ol>
 
-      <!--<div class="d-flex justify-content-center">
-        <div class="me-auto">
-          <a href="{% url 'home' %}" class="btn btn-outline-primary">Go back</a>
-        </div>
-        <div>
-          <button type="submit" class="btn btn-primary">Finish</button>
-        </div>
-      </div>-->
       <div class="d-grid gap-2 mt-5 col-lg-4 mx-auto text-center">
           <button type="button" class="btn btn-primary btn-lg">
               Retry <i class="bi-arrow-counterclockwise ms-1"></i>
@@ -118,6 +117,8 @@ Practice "{{ exam.nome }}"
             answers.push(item.value);
         })
 
+        $("#spinner-" + question).removeClass("d-none");
+
         $.ajax({
           url: '{% url "check_answer" %}',
           type: 'GET',
@@ -131,7 +132,13 @@ Practice "{{ exam.nome }}"
             else {
               $("#count-" + question).addClass("bg-danger");
             }
+            $("#spinner-" + question).addClass("d-none");
+          },
+          error: function(data) {
+            $("#spinner-" + question).addClass("d-none");
           }
+        }).done(function(){
+          $("#spinner-" + question).addClass("d-none");
         });
       });
     
